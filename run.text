@@ -1,0 +1,4 @@
+cd disease_analyzer/
+venv\Scripts\activate
+python -m venv venv
+python manage.py runserver

@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>রোগ বিশ্লেষক</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'analyzer/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">রোগ বিশ্লেষক</h1>
+        
+        <div class="input-form">
+            <form id="analysisForm">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label>Gender:</label>
+                    <select name="gender" class="select-input">
+                        <option value="Male">পুরুষ (Male)</option>
+                        <option value="Female">মহিলা (Female)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Age (বয়স):</label>
+                    <input type="number" name="age" class="select-input" min="0" max="150" required placeholder="বয়স লিখুন">
+                </div>
+
+                <div class="input-group">
+                    <label>NS1:</label>
+                    <select name="ns1" class="select-input">
+                        <option value="0">0 (নেগেটিভ)</option>
+                        <option value="1">1 (পজিটিভ)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label>IgG:</label>
+                    <select name="igg" class="select-input">
+                        <option value="0">0 (নেগেটিভ)</option>
+                        <option value="1">1 (পজিটিভ)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label>IgM:</label>
+                    <select name="igm" class="select-input">
+                        <option value="0">0 (নেগেটিভ)</option>
+                        <option value="1">1 (পজিটিভ)</option>
+                    </select>
+                </div>
+
+                <button type="submit">বিশ্লেষণ করুন</button>
+            </form>
+        </div>
+        
+        <div id="results" class="results">
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        <th>Gender</th>
+                        <th>Age</th>
+                        <th>NS1</th>
+                        <th>IgG</th>
+                        <th>IgM</th>
+                        <th>Area</th>
+                        <th>District</th>
+                    </tr>
+                </thead>
+                <tbody id="resultTableBody">
+                    <!-- Results will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('analysisForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch('/analyze/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('results').style.display = 'block';
+                    const tableBody = document.getElementById('resultTableBody');
+                    tableBody.innerHTML = ''; // Clear previous results
+                    
+                    const row = document.createElement('tr');
+                    const district = data.results.District;
+                    row.innerHTML = `
+                        <td>${formData.get('gender')}</td>
+                        <td>${formData.get('age')}</td>
+                        <td class="${data.results.NS1 ? 'positive' : 'negative'}">${data.results.NS1}</td>
+                        <td class="${data.results.IgG ? 'positive' : 'negative'}">${data.results.IgG}</td>
+                        <td class="${data.results.IgM ? 'positive' : 'negative'}">${data.results.IgM}</td>
+                        <td>${data.results.Area}</td>
+                        <td class="${district ? 'true' : 'false'}">${district ? 'True' : 'False'}</td>
+                    `;
+                    tableBody.appendChild(row);
+                } else {
+                    alert('ত্রুটি: ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('ত্রুটি: ' + error);
+            });
+        });
+    </script>
+</body>
+</html>
