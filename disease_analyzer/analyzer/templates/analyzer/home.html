@@ -70,10 +70,44 @@
                     <!-- Results will be inserted here -->
                 </tbody>
             </table>
+
+            <div id="analysis" class="analysis-section">
+                <h2>বিস্তারিত বিশ্লেষণ</h2>
+                <div id="analysisContent" class="analysis-content">
+                    <!-- Analysis will be inserted here -->
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        function getAnalysisText(ns1, igg, igm) {
+            let analysis = [];
+            
+            // Add test interpretations
+            if (ns1 === 1) {
+                analysis.push("NS1 পরীক্ষা পজিটিভ - এটি সাম্প্রতিক সংক্রমণের ইঙ্গিত দেয়।");
+            }
+            if (igm === 1) {
+                analysis.push("IgM পজিটিভ - এটি বর্তমান বা সাম্প্রতিক সংক্রমণের ইঙ্গিত দেয়।");
+            }
+            if (igg === 1) {
+                analysis.push("IgG পজিটিভ - এটি পূর্বের সংক্রমণের ইঙ্গিত দেয়।");
+            }
+
+            // Add overall interpretation
+            const positiveCount = ns1 + igg + igm;
+            if (positiveCount >= 2) {
+                analysis.push("<strong>সামগ্রিক ফলাফল:</strong> আপনার ডেঙ্গু পজিটিভ। অনুগ্রহ করে দ্রুত চিকিৎসকের পরামর্শ নিন।");
+            } else if (positiveCount === 1) {
+                analysis.push("<strong>সামগ্রিক ফলাফল:</strong> সন্দেহজনক। পুনরায় পরীক্ষা করার পরামর্শ দেওয়া হচ্ছে।");
+            } else {
+                analysis.push("<strong>সামগ্রিক ফলাফল:</strong> নেগেটিভ। তবে উপসর্গ থাকলে পুনরায় পরীক্ষা করুন।");
+            }
+
+            return analysis.join("<br><br>");
+        }
+
         document.getElementById('analysisForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this);
@@ -104,6 +138,15 @@
                         <td class="${district ? 'true' : 'false'}">${district ? 'True' : 'False'}</td>
                     `;
                     tableBody.appendChild(row);
+
+                    // Add analysis
+                    const analysisContent = document.getElementById('analysisContent');
+                    const analysis = getAnalysisText(
+                        parseInt(data.results.NS1),
+                        parseInt(data.results.IgG),
+                        parseInt(data.results.IgM)
+                    );
+                    analysisContent.innerHTML = analysis;
                 } else {
                     alert('ত্রুটি: ' + data.error);
                 }
@@ -113,5 +156,215 @@
             });
         });
     </script>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: bold;
+            width: 100%;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        .input-form {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+        }
+
+        .input-group label {
+            font-size: 18px;
+            margin-right: 15px;
+            color: #333;
+            font-weight: 500;
+            flex: 1;
+            min-width: 100px;
+            box-sizing: border-box;
+        }
+
+        .select-input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 180px;
+            background-color: white;
+            flex: 2;
+            max-width: 200px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+            width: 80%;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .results {
+            width: 100%;
+            margin-top: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
+            overflow-x: auto;
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            min-width: 600px;
+        }
+
+        .result-table th,
+        .result-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            white-space: nowrap;
+        }
+
+        .result-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .analysis-section {
+            width: 100%;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
+        }
+
+        .analysis-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .analysis-content {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #444;
+            text-align: left;
+            padding: 0 15px;
+            box-sizing: border-box;
+            word-wrap: break-word;
+        }
+
+        .analysis-content strong {
+            color: #000;
+        }
+
+        .positive {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .negative {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .true {
+            color: #dc3545 !important;
+            font-weight: bold;
+        }
+
+        .false {
+            color: #28a745 !important;
+            font-weight: bold;
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .input-group label {
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
+
+            .select-input {
+                width: 100%;
+                max-width: none;
+            }
+
+            .results {
+                padding: 10px;
+            }
+        }
+    </style>
 </body>
 </html>
