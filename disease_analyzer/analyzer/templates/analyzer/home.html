@@ -172,7 +172,7 @@
         .container {
             width: 100%;
             max-width: 800px;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.45);
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
             padding: 30px;
@@ -183,17 +183,19 @@
             align-items: center;
             box-sizing: border-box;
             overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
         .main-title {
             text-align: center;
             font-size: 32px;
-            color: #333;
+            color: #111;
             margin-bottom: 30px;
             font-weight: bold;
             width: 100%;
             padding: 0 15px;
             box-sizing: border-box;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.9);
         }
 
         .input-form {
@@ -202,7 +204,7 @@
             text-align: center;
             margin-bottom: 30px;
             padding: 20px;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.35);
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             box-sizing: border-box;
@@ -222,20 +224,21 @@
         .input-group label {
             font-size: 18px;
             margin-right: 15px;
-            color: #333;
+            color: #111;
             font-weight: 500;
             flex: 1;
             min-width: 100px;
             box-sizing: border-box;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.9);
         }
 
         .select-input {
             padding: 10px;
             font-size: 16px;
-            border: 1px solid #ddd;
+            border: 1px solid rgba(221, 221, 221, 0.4);
             border-radius: 6px;
             width: 180px;
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.7);
             flex: 2;
             max-width: 200px;
             box-sizing: border-box;
@@ -262,7 +265,7 @@
         .results {
             width: 100%;
             margin-top: 30px;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.35);
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -286,7 +289,7 @@
         }
 
         .result-table th {
-            background-color: #f8f9fa;
+            background-color: rgba(248, 249, 250, 0.4);
             font-weight: 600;
         }
 
@@ -294,7 +297,7 @@
             width: 100%;
             margin-top: 30px;
             padding: 20px;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.35);
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             box-sizing: border-box;
@@ -310,11 +313,12 @@
         .analysis-content {
             font-size: 16px;
             line-height: 1.6;
-            color: #444;
+            color: #111;
             text-align: left;
             padding: 0 15px;
             box-sizing: border-box;
             word-wrap: break-word;
+            text-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
         }
 
         .analysis-content strong {
